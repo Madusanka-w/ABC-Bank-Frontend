@@ -112,33 +112,61 @@ function BankAccountPage() {
   }, [userToken]);
 
 
-  const notify = () => toast("Transaction Success!");
+  const notify = () => toast.success("Transaction Success!", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const errorNotify = () => toast.error("Not enough balance!", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
 
   const handleTransactionSubmit = async (event) => {
     event.preventDefault();
 
     let url = '';
-    // let data = {
-    //   amount: transactionAmount,
-    // };
 
     if (transactionType === 'deposit') {
       url = 'http://localhost:8080/api/v1/auth/transaction';
 
     } else if (transactionType === 'withdrawal') {
       url = 'http://localhost:8080/api/v1/auth/withdrawal';
-      //   data = {
-      //     ...data,
-      //     accountId: selectedBankAccount.id,
-      //   };
     }
 
     try {
       const response = await axios.post(url + `/${transactionAmount}/${selectedBankAccount.id}`);
-      if (response.status == 200) {
+      console.log("response", response)
+      //  if(response.data === 'Not enough balance'){
+      //   toast.error(response.data, {
+      //     position: "top-right",
+      //     autoClose: 2000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "light",
+      //   })
+      // }else{
+      //   notify()
+      // }
+      if(response.status == 200 ){
         notify()
-        console.log("trans", response)
       }
+
 
       const updatedBankAccounts = bankAccounts.map((account) => {
         if (account.accountNumber === response.data.accountNumber) {
@@ -158,38 +186,10 @@ function BankAccountPage() {
   };
   console.log("data", bankAccounts)
 
-  // ChartJS.register(ArcElement, Tooltip, Legend);
-  // const data = {
-  //   labels: [ 'Deposits',
-  //   'Withdrawals'],
-  //   datasets: [
-  //     {
-  //       label: 'Transactions',
-  //       data: [
-  //         bankAccounts.transactions.filter(transaction => transaction.type === 'SAVING').length,
-  //         bankAccounts.transactions.filter(transaction => transaction.type === 'WITHDRAWAL').length,
-  //         // bankAccounts.transactions.filter(transaction => transaction.type === 'Transfer').length,
-  //       ],
-  //       backgroundColor: [
-  //         'rgba(255, 99, 132, 0.2)',  // Color for Deposits
-  //         'rgba(54, 162, 235, 0.2)',  // Color for Withdrawals
-  //         'rgba(255, 206, 86, 0.2)',   // Color for Transfers
-  //       ],
-  //       borderColor: [
-  //         'rgba(255, 99, 132, 1)',     // Border color for Deposits
-  //         'rgba(54, 162, 235, 1)',     // Border color for Withdrawals
-  //         'rgba(255, 206, 86, 1)',      // Border color for Transfers
-  //       ],
-  //       borderWidth: 1,
-  //     }
-      
-  //   ],
-  // };
-  
 
   const handleSubmit = (id) => {
     axios
-      .get('http://localhost:8080/api/v1/auth/pdf/'+ id, {
+      .get('http://localhost:8080/api/v1/auth/pdf/' + id, {
         responseType: "blob",
       })
       .then((response) => {
@@ -203,102 +203,102 @@ function BankAccountPage() {
 
   return (
     <div>
-    <Box sx={styles.container}>
-      <AppBar position="static" sx={styles.appBar}>
-        <Toolbar>
-          <Button
-            variant="contained"
-            color="primary"
-            href="/userDashboard"
-            startIcon={<ArrowBackIosIcon />}
-            sx={styles.backButton}
-          >
-            Back to Home
-          </Button>
-          <Typography variant="h6" component="div">
-            Bank Accounts
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      {bankAccounts.map((account, index) => (
-        <Card key={index} sx={styles.accountCard}>
-          <CardContent>
-            <Typography sx={styles.cardTitle}>{account.accountType}</Typography>
-            <Typography variant="subtitle1">Account Number: {account.accountNumber}</Typography>
-            <Typography variant="subtitle1">Balance: {account.accountBalance}</Typography>
+      <Box sx={styles.container}>
+        <AppBar position="static" sx={styles.appBar}>
+          <Toolbar>
             <Button
+              variant="contained"
+              color="primary"
+              href="/userDashboard"
+              startIcon={<ArrowBackIosIcon />}
+              sx={styles.backButton}
+            >
+              Back to Home
+            </Button>
+            <Typography variant="h6" component="div">
+              Bank Accounts
+            </Typography>
+          </Toolbar>
+        </AppBar>
+
+        {bankAccounts.map((account, index) => (
+          <Card key={index} sx={styles.accountCard}>
+            <CardContent>
+              <Typography sx={styles.cardTitle}>{account.accountType}</Typography>
+              <Typography variant="subtitle1">Account Number: {account.accountNumber}</Typography>
+              <Typography variant="subtitle1">Balance: {account.accountBalance}</Typography>
+              <Button
                 onClick={() => handleSubmit(account.id)}
               >
                 PDF
               </Button>
-          </CardContent>
-
-          <Card sx={styles.transactionCard}>
-            <CardContent>
-              <Typography sx={styles.cardTitle}>Transactions</Typography>
-              <List>
-                {account.transactions.map((transaction, index) => (
-                  <ListItem key={index}>
-                    <ListItemText
-                      primary={transaction.type}
-                      secondary={transaction.amount}
-                      sx={styles.listItemText}
-                    />
-                  </ListItem>
-                ))}
-              </List>
             </CardContent>
 
-            <CardActions>
-              <Button
-                onClick={() => {
-                  setTransactionType('deposit');
-                  setSelectedBankAccount(account);
-                  setShowForm(true);
-                }}
-              >
-                Deposit
-              </Button>
-              <Button
-                onClick={() => {
-                  setTransactionType('withdrawal');
-                  setSelectedBankAccount(account);
-                  setShowForm(true);
-                }}
-              >
-                Withdrawal
-              </Button>
-              
-            </CardActions>
-          </Card>
-        </Card>
-      ))}
+            <Card sx={styles.transactionCard}>
+              <CardContent>
+                <Typography sx={styles.cardTitle}>Transactions</Typography>
+                <List>
+                  {account.transactions.map((transaction, index) => (
+                    <ListItem key={index}>
+                      <ListItemText
+                        primary={transaction.type}
+                        secondary={transaction.amount}
+                        sx={styles.listItemText}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
 
-      <Modal open={showForm} onClose={() => setShowForm(false)}>
-        <Box sx={styles.modalContainer}>
-          <Box sx={styles.modalContent}>
-            <Typography sx={styles.modalTitle}>
-              {transactionType === 'deposit' ? 'Deposit' : 'Withdrawal'}
-            </Typography>
-            <form onSubmit={handleTransactionSubmit} sx={styles.modalForm}>
-              <TextField
-                type="number"
-                label="Amount"
-                value={transactionAmount}
-                onChange={(event) => setTransactionAmount(event.target.value)}
-                required
-              />
-              <Button type="submit" variant="contained" color="primary" sx={styles.modalButton}>
-                Submit
-              </Button>
-            </form>
+              <CardActions>
+                <Button
+                  onClick={() => {
+                    setTransactionType('deposit');
+                    setSelectedBankAccount(account);
+                    setShowForm(true);
+                  }}
+                >
+                  Deposit
+                </Button>
+                <Button
+                  onClick={() => {
+                    setTransactionType('withdrawal');
+                    setSelectedBankAccount(account);
+                    setShowForm(true);
+                  }}
+                >
+                  Withdrawal
+                </Button>
+
+              </CardActions>
+            </Card>
+          </Card>
+        ))}
+
+        <Modal open={showForm} onClose={() => setShowForm(false)}>
+          <Box sx={styles.modalContainer}>
+            <Box sx={styles.modalContent}>
+              <Typography sx={styles.modalTitle}>
+                {transactionType === 'deposit' ? 'Deposit' : 'Withdrawal'}
+              </Typography>
+              <form onSubmit={handleTransactionSubmit} sx={styles.modalForm}>
+                <TextField
+                  type="number"
+                  label="Amount"
+                  value={transactionAmount}
+                  onChange={(event) => setTransactionAmount(event.target.value)}
+                  required
+                />
+                <Button type="submit" variant="contained" color="primary" sx={styles.modalButton}>
+                  Submit
+                </Button>
+              </form>
+            </Box>
           </Box>
-        </Box>
-      </Modal>
-    </Box>
-    <ToastContainer />
-    {/* <Pie data={data} /> */}
+        </Modal>
+      </Box>
+      <ToastContainer />
+      {/* <Pie data={data} /> */}
     </div>
   );
 }
