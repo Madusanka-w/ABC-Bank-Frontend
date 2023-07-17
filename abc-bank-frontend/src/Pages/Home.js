@@ -32,7 +32,8 @@ function ResponsiveAppBar() {
     const storedData = localStorage.getItem('user');
     const data = storedData ? JSON.parse(storedData) : null;
     setUserData(data)
-  }, []);
+    
+  }, [userData]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

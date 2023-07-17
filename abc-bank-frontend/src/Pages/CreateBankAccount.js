@@ -35,7 +35,7 @@ export default function Register() {
         const storedData = localStorage.getItem('token');
         const data = storedData ? JSON.parse(storedData) : null;
         setUserToken(data);
-    })
+    }, [])
 
     
 
@@ -52,6 +52,7 @@ export default function Register() {
                 },
               }
             );
+            console.log("res", response)
             toast("Account created")
         setTimeout(() => {
             window.location.href="/viewbankaccounts"
