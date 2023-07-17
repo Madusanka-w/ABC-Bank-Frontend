@@ -16,6 +16,11 @@ import {
   Modal,
 } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { saveAs } from "file-saver";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 
 const styles = {
   container: {
@@ -70,7 +75,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     marginTop: 5,
-    
+
   },
 };
 
@@ -106,6 +111,9 @@ function BankAccountPage() {
     fetchBankAccounts();
   }, [userToken]);
 
+
+  const notify = () => toast("Transaction Success!");
+
   const handleTransactionSubmit = async (event) => {
     event.preventDefault();
 
@@ -116,19 +124,22 @@ function BankAccountPage() {
 
     if (transactionType === 'deposit') {
       url = 'http://localhost:8080/api/v1/auth/transaction';
-      
+
     } else if (transactionType === 'withdrawal') {
       url = 'http://localhost:8080/api/v1/auth/withdrawal';
-    //   data = {
-    //     ...data,
-    //     accountId: selectedBankAccount.id,
-    //   };
+      //   data = {
+      //     ...data,
+      //     accountId: selectedBankAccount.id,
+      //   };
     }
 
     try {
-      const response = await axios.post(url+`/${transactionAmount}/${selectedBankAccount.id}`);
+      const response = await axios.post(url + `/${transactionAmount}/${selectedBankAccount.id}`);
+      if (response.status == 200) {
+        notify()
+        console.log("trans", response)
+      }
 
-      
       const updatedBankAccounts = bankAccounts.map((account) => {
         if (account.accountNumber === response.data.accountNumber) {
           return response.data;
@@ -145,8 +156,53 @@ function BankAccountPage() {
       console.error('Error performing transaction:', error);
     }
   };
+  console.log("data", bankAccounts)
+
+  // ChartJS.register(ArcElement, Tooltip, Legend);
+  // const data = {
+  //   labels: [ 'Deposits',
+  //   'Withdrawals'],
+  //   datasets: [
+  //     {
+  //       label: 'Transactions',
+  //       data: [
+  //         bankAccounts.transactions.filter(transaction => transaction.type === 'SAVING').length,
+  //         bankAccounts.transactions.filter(transaction => transaction.type === 'WITHDRAWAL').length,
+  //         // bankAccounts.transactions.filter(transaction => transaction.type === 'Transfer').length,
+  //       ],
+  //       backgroundColor: [
+  //         'rgba(255, 99, 132, 0.2)',  // Color for Deposits
+  //         'rgba(54, 162, 235, 0.2)',  // Color for Withdrawals
+  //         'rgba(255, 206, 86, 0.2)',   // Color for Transfers
+  //       ],
+  //       borderColor: [
+  //         'rgba(255, 99, 132, 1)',     // Border color for Deposits
+  //         'rgba(54, 162, 235, 1)',     // Border color for Withdrawals
+  //         'rgba(255, 206, 86, 1)',      // Border color for Transfers
+  //       ],
+  //       borderWidth: 1,
+  //     }
+      
+  //   ],
+  // };
+  
+
+  const handleSubmit = (id) => {
+    axios
+      .get('http://localhost:8080/api/v1/auth/pdf/'+ id, {
+        responseType: "blob",
+      })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        saveAs(blob, "bank_statement.pdf");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
+    <div>
     <Box sx={styles.container}>
       <AppBar position="static" sx={styles.appBar}>
         <Toolbar>
@@ -171,6 +227,11 @@ function BankAccountPage() {
             <Typography sx={styles.cardTitle}>{account.accountType}</Typography>
             <Typography variant="subtitle1">Account Number: {account.accountNumber}</Typography>
             <Typography variant="subtitle1">Balance: {account.accountBalance}</Typography>
+            <Button
+                onClick={() => handleSubmit(account.id)}
+              >
+                PDF
+              </Button>
           </CardContent>
 
           <Card sx={styles.transactionCard}>
@@ -208,6 +269,7 @@ function BankAccountPage() {
               >
                 Withdrawal
               </Button>
+              
             </CardActions>
           </Card>
         </Card>
@@ -235,6 +297,9 @@ function BankAccountPage() {
         </Box>
       </Modal>
     </Box>
+    <ToastContainer />
+    {/* <Pie data={data} /> */}
+    </div>
   );
 }
 

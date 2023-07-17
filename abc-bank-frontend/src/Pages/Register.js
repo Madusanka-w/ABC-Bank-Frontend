@@ -14,6 +14,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios'
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -27,7 +32,7 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
+
 
 const defaultTheme = createTheme();
 
@@ -57,15 +62,19 @@ let data = {
   password: password
 }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const { register, handleSubmit } = useForm();
+
+  const onSubmit = async (formdata) => {
+    
  
-    console.log("data", data)
+    console.log("data", formdata)
     try{
-      let res = await axios.post("http://localhost:8080/api/v1/auth/dto", data)
+      let res = await axios.post("http://localhost:8080/api/v1/auth/dto", formdata)
       if (res) {
-      alert("Register Successfully")
-      window.location.href="/"
+        toast("Registered Successfully")
+        setTimeout(() => {
+          window.location.href = "/"
+        }, 2000); 
       }else {
         alert("some error occured")
       }
@@ -75,6 +84,7 @@ let data = {
   };
 
   return (
+    <div>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -92,7 +102,7 @@ let data = {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={1}>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -102,8 +112,9 @@ let data = {
                   fullWidth
                   id="firstName"
                   label="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  {...register("firstName")}
+                  // value={firstName}
+                  // onChange={(e) => setFirstName(e.target.value)}
                   autoFocus
                 />
               </Grid>
@@ -114,8 +125,9 @@ let data = {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  {...register("lastName")}
+                  // value={lastName}
+                  // onChange={(e) => setLastName(e.target.value)}
                   autoComplete="family-name"
                 />
               </Grid>
@@ -126,8 +138,9 @@ let data = {
                   id="email"
                   label="Email Address"
                   name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
+                  // value={email}
+                  // onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                 />
               </Grid>
@@ -138,8 +151,9 @@ let data = {
                   id="nic"
                   label="NIC Number"
                   name="nic"
-                  value={nic}
-                  onChange={(e) => setNic(e.target.value)}
+                  {...register("nic")}
+                  // value={nic}
+                  // onChange={(e) => setNic(e.target.value)}
                   autoComplete="nic"
                 />
               </Grid>
@@ -150,8 +164,9 @@ let data = {
                   id="contactNumber"
                   label="Contact Number"
                   name="contactNumber"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
+                  {...register("contactNumber")}
+                  // value={contactNumber}
+                  // onChange={(e) => setContactNumber(e.target.value)}
                   autoComplete="contactNumber"
                 />
               </Grid>
@@ -162,8 +177,9 @@ let data = {
                   id="addressLine1"
                   label="Address Line 1"
                   name="addressLine1"
-                  value={addressLine1}
-                  onChange={(e) => setAddressLine1(e.target.value)}
+                  {...register("addressLine1")}
+                  // value={addressLine1}
+                  // onChange={(e) => setAddressLine1(e.target.value)}
                   autoComplete="addressLine1"
                 />
               </Grid>
@@ -174,8 +190,9 @@ let data = {
                   id="addressLine2"
                   label="Address Line 2"
                   name="addressLine2"
-                  value={addressLine2}
-                  onChange={(e) => setAddressLine2(e.target.value)}
+                  {...register("addressLine2")}
+                  // value={addressLine2}
+                  // onChange={(e) => setAddressLine2(e.target.value)}
                   autoComplete="addressLine2"
                 />
               </Grid>
@@ -186,8 +203,9 @@ let data = {
                   fullWidth
                   id="ciry"
                   label="City"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  {...register("city")}
+                  // value={city}
+                  // onChange={(e) => setCity(e.target.value)}
                   autoFocus
                 />
               </Grid>
@@ -198,8 +216,9 @@ let data = {
                   id="country"
                   label="Country"
                   name="country"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
+                  {...register("country")}
+                  // value={country}
+                  // onChange={(e) => setCountry(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -210,8 +229,9 @@ let data = {
                   label="Password"
                   type="password"
                   id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
+                  // value={password}
+                  // onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
                 />
               </Grid>
@@ -242,5 +262,7 @@ let data = {
         <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
+    <ToastContainer />
+    </div>
   );
 }

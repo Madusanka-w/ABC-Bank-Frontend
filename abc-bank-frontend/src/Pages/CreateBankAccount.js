@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Home from './Home'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { InputLabel, Select } from '@mui/material';
 function Copyright(props) {
@@ -80,8 +82,11 @@ export default function Register() {
                 },
               }
             );
-            alert("Account Created")
+            toast("Account created")
+        setTimeout(() => {
             window.location.href="/viewbankaccounts"
+        }, 2000); 
+            
           } catch (error) {
             console.error('Error fetching bank accounts:', error);
           }

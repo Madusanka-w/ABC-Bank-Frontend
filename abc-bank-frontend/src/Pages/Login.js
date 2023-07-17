@@ -14,6 +14,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useForm } from "react-hook-form";
+
 
 function Copyright(props) {
   return (
@@ -42,19 +46,27 @@ export default function Login() {
     password: password
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { register, handleSubmit } = useForm();
 
-    console.log("data", data)
+  const notify = () => toast("Login !");
+
+  const onSubmit = async (formdata) => {
+    // e.preventDefault();
+
+    console.log("data", formdata)
     try {
-      let res = await axios.post("http://localhost:8080/api/v1/auth/authenticate", data)
+      let res = await axios.post("http://localhost:8080/api/v1/auth/authenticate", formdata)
       if (res) {
         console.log("res", res.data.body.user)
         localStorage.setItem('user', JSON.stringify(res.data.body.user));
         localStorage.setItem('token', JSON.stringify(res.data.body.token));
-      
-        alert("Login Successfully")
-        window.location.href = "/userDashboard"
+        toast("Login Successfully")
+        setTimeout(() => {
+          window.location.href = "/userDashboard"
+        }, 2000);  
+        
+        
+        
       } else {
         alert("some error occured")
       }
@@ -63,7 +75,11 @@ export default function Login() {
     }
   };
 
+
+
+
   return (
+    <div>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -81,7 +97,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -89,8 +105,9 @@ export default function Login() {
               id="email"
               label="Email Address"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register("email")}
+              // value={email}
+              // onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               autoFocus
             />
@@ -102,8 +119,9 @@ export default function Login() {
               label="Password"
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
+              // value={password}
+              // onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -136,5 +154,7 @@ export default function Login() {
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
+    <ToastContainer />
+    </div>
   );
 }

@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -58,12 +59,33 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const closeAfter7 = () => toast("Login out...", { 
+    position: "top-center",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light", 
+  });
+
+  
+
   const handleLogout = () =>{
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    alert("Logged out successfuly!")
-    window.location.href="/";
+    closeAfter7();
+    setTimeout(() => {
+      window.location.href = "/"
+    }, 2000);  
+    // window.location.href="/";
 }
+
+// const handlefunction = () => {
+//   handleLogout();
+//   clo
+// }
 
   return (
     <div>
@@ -163,6 +185,14 @@ function ResponsiveAppBar() {
               >
                 Users
               </Button>
+              <Button
+                key="Account"
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                href='/createBankAccount'
+              >
+                Create Bank Account
+              </Button>
             {/* ))} */}
           </Box>
 
@@ -202,7 +232,18 @@ function ResponsiveAppBar() {
       </Container>
       
     </AppBar>
-    
+    <ToastContainer 
+    position="top-center"
+    autoClose={5000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light" 
+    />
     </div>
   );
 }
