@@ -12,7 +12,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
 import axios from 'axios'
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
@@ -38,32 +37,9 @@ const defaultTheme = createTheme();
 
 export default function Register() {
 
-// const [ firstName, setFirstName ] = useState("");
-// const [lastName, setLastName] = useState("")
-// const [email, setEmail] = useState("")
-// const [nic, setNic] = useState("")
-// const [contactNumber, setContactNumber] = useState("")
-// const [addressLine1, setAddressLine1] = useState("")
-// const [addressLine2, setAddressLine2] = useState("")
-// const [city, setCity] = useState("")
-// const [country, setCountry] = useState("")
-// const [password, setPassword] = useState("")
 
-// let data = {
-//   firstName: firstName,
-//   lastName: lastName,
-//   email: email,
-//   nic: nic,
-//   contactNumber: contactNumber,
-//   addressLine1: addressLine1,
-//   addressLine2: addressLine2,
-//   city: city,
-//   country: country,
-//   password: password
-// }
+const { register, handleSubmit } = useForm();
 
-const { register, handleSubmit, formState } = useForm();
-const { error } = formState;
 
   const onSubmit = async (formdata) => {
     
@@ -140,7 +116,7 @@ const { error } = formState;
                   name="email"
                   {...register("email", { 
                     pattern:{
-                      value: '/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i',
+                      value: '/^[A-Z0-9._%+-]+@[A-Z0-9.-]+[A-Z]{2,}$/i',
                       message: 'Invalid Email'
                     },
                     })}

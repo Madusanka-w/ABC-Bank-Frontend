@@ -19,8 +19,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { saveAs } from "file-saver";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
 
 const styles = {
   container: {
@@ -123,16 +121,6 @@ function BankAccountPage() {
     theme: "light",
   });
 
-  const errorNotify = () => toast.error("Not enough balance!", {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
 
   const handleTransactionSubmit = async (event) => {
     event.preventDefault();
@@ -149,21 +137,8 @@ function BankAccountPage() {
     try {
       const response = await axios.post(url + `/${transactionAmount}/${selectedBankAccount.id}`);
       console.log("response", response)
-      //  if(response.data === 'Not enough balance'){
-      //   toast.error(response.data, {
-      //     position: "top-right",
-      //     autoClose: 2000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "light",
-      //   })
-      // }else{
-      //   notify()
-      // }
-      if(response.status == 200 ){
+     
+      if(response.status === 200 ){
         notify()
       }
 

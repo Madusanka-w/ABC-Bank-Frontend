@@ -4,13 +4,13 @@ import Register from './Pages/Register.js'
 import Dashboard from './Pages/Dashboard';
 import CreateBankAccount from './Pages/CreateBankAccount';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Test from './Pages/Test';
 import Home from './Pages/Home';
 import UserProfile from './Pages/User/UserProfile';
 import UserDashboard from './Pages/User/UserDashboard';
 import ViewBankAccounts from './Pages/User/ViewBankAccounts';
 import UserDetails from './Pages/UserDetails';
 import AllBankAccounts from './Pages/AllBankAccounts';
+import Reset from './Pages/Reset';
 
 // function App() {
 //   return (
@@ -35,13 +35,13 @@ function App() {
           <Route path='/home' element={<Home />} />
           <Route path='/register' element={<Register />} />
           <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/test' element={<Test />} />
           <Route path='/createBankAccount' element={<CreateBankAccount />} />
           <Route path='/userProfile' element={<UserProfile />} />
           <Route path='/userDashboard' element={<UserDashboard />} />
           <Route path='/viewbankaccounts' element={<ViewBankAccounts />} />
           <Route path='/users' element={<UserDetails />} />
           <Route path='/allbankaccounts' element={<AllBankAccounts />} />
+          <Route path='/reset' element={<Reset />} />
         </Routes>
       </Router>
     </div>

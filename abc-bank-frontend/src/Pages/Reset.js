@@ -33,10 +33,11 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+export default function Reset() {
   const defaultValues = {
     email: '',
     password: '',
+    repassword: ''
   };
 
   const {
@@ -46,27 +47,37 @@ export default function Login() {
   } = useForm({ defaultValues });
 
   const [showPassword, setShowPassword] = useState(false);
-
- 
+  const [showrePassword, setShowrePassword] = useState(false);
+  
 
   const onSubmit = async (formData) => {
-    
-    try {
-      let res = await axios.post("http://localhost:8080/api/v1/auth/authenticate", formData);
-      console.log("responsalsf", res)
-      if (res) {
-        console.log("res", res.data.body.user);
-        localStorage.setItem('user', JSON.stringify(res.data.body.user));
-        localStorage.setItem('token', JSON.stringify(res.data.body.token));
-        toast("Login Successfully");
-        setTimeout(() => {
-          window.location.href = "/userDashboard";
-        }, 2000);
-      } 
-    } catch (err) {
-      console.log(err);
-      toast.error("Invalid Email or Password...");
+
+    const email = formData.email
+    const password = formData.password
+    const repassword = formData.repassword
+
+    if(password === repassword){
+      try {
+        let res = await axios.patch(`http://localhost:8080/api/v1/auth/updatePassword/${email}/${password}`);
+        console.log("responsalsf", res)
+        if(res) {
+          // console.log("res");
+          // localStorage.setItem('user', JSON.stringify(res.data.body.user));
+          // localStorage.setItem('token', JSON.stringify(res.data.body.token));
+          toast.success("Password Reset Successfully");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 2000);
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error("Invalid Email or Password...");
+      }
+    }else{
+      toast.error("password mismatched")
     }
+
+    
   };
 
   return (
@@ -149,6 +160,40 @@ export default function Login() {
                 )}
               />
 
+              <Controller
+                name="repassword"
+                control={control}
+                rules={{
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must have at least 8 characters",
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="repassword"
+                    label="Confirm Password"
+                    type={showPassword ? "text" : "password"}
+                    id="repassword"
+                    autoComplete="current-password"
+                    error={!!errors.repassword}
+                    helperText={errors.repassword ? errors.repassword.message : null}
+                    InputProps={{
+                      endAdornment: (
+                        <Button onClick={() => setShowrePassword((prev) => !prev)}>
+                          {showrePassword ? "Hide" : "Show"}
+                        </Button>
+                      ),
+                    }}
+                  />
+                )}
+              />
+
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -160,7 +205,7 @@ export default function Login() {
 
               <Grid container>
                 <Grid item xs>
-                  <Link href="/reset" variant="body2">
+                  <Link href="#" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

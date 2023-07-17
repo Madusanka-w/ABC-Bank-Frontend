@@ -25,24 +25,8 @@ const useStyles = makeStyles({
 export default function DenseTable() {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-//   useEffect(() => {
-//     fetchUsers();
-//   }, []);
 
-//   const fetchUsers = async () => {
-//     try {
-//       const response = await axios.get('http://localhost:8080/api/v1/auth');
-//       setUsers(response.data);
-//       setIsLoading(false);
-//       console.log("users", response.data);
-//     } catch (error) {
-//       console.error('Error fetching users:', error);
-//       setIsLoading(false);
-//     }
-//     console.log("users222", use);
-//   };
   useEffect(() => {
 
     const fetchBankAccounts = async () => {

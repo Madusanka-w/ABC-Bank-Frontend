@@ -25,8 +25,6 @@ const useStyles = makeStyles({
 export default function AllBankAccounts() {
   const classes = useStyles();
   const [accouts, setAccounts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
 //   useEffect(() => {
 //     fetchUsers();
 //   }, []);

@@ -18,15 +18,6 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 const pages = ['Account', 'Transaction', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-const bull = (
-    <Box
-      component="span"
-      sx={{ display: 'inline-block', mx: '4px', transform: 'scale(0.8)' }}
-    >
-      •
-    </Box>
-  );
 
   
 

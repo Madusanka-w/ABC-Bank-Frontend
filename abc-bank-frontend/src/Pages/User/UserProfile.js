@@ -12,12 +12,6 @@ const UserProfilePage = () => {
   const [lastName, setLastName] = useState('')
   const [contactNumber, setContactNumber] = useState('')
   const [nic, setNice] = useState('')
-  const [email, setEmail] = useState('')
-  const [addressLine1, setAddressLine1] = useState("")
-const [addressLine2, setAddressLine2] = useState("")
-const [city, setCity] = useState("")
-const [country, setCountry] = useState("")
-const [password, setPassword] = useState("")
 
   useEffect(() => {
     const storedData = localStorage.getItem('user');
